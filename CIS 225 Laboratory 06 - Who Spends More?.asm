@@ -216,73 +216,73 @@ main endp
 
 GetName proc uses edx esi eax
 
-		call    WriteString
-		mov     edx, esi
-		call    ReadString
-		call    Crlf
-		call    WriteString
-		call    Crlf
+	call    WriteString
+	mov     edx, esi
+	call    ReadString
+	call    Crlf
+	call    WriteString
+	call    Crlf
 
         ret
 GetName endp
 
 GetEntryInformation proc uses edi eax
 		
-		mov     edx, esi
-		call    ReadString
-		call    Crlf
-		mov     edx, OFFSET spendingPmp
-		call    WriteString
-		call    ReadDec
-		mov     [edi], eax
-		call    Crlf
+	mov     edx, esi
+	call    ReadString
+	call    Crlf
+	mov     edx, OFFSET spendingPmp
+	call    WriteString
+	call    ReadDec
+	mov     [edi], eax
+	call    Crlf
 
-		ret
+	ret
 GetEntryInformation endp
 
 ComputeTotal proc uses esi
 		
-		mov    eax, [edi]
-		add    [esi], eax
-		add    edi, 4
+	mov    eax, [edi]
+	add    [esi], eax
+	add    edi, 4
 
-		ret
+	ret
 ComputeTotal endp
 
 DisplaySummary proc uses eax ebx ecx edx esi edi
 
-		.while(ecx != 0)
-   
-		    mov    edx, esi
-		    call   WriteString
-		    mov    al, ' '
-		    call   WriteChar
-		    mov    eax, [edi]
-			mov    ebx, 100
-			mov    edx, 0
-			div    ebx
-		    call   WriteDec
-			mov    al, '.'
-			call   WriteChar
-			mov    eax, edx
-			.if(eax >= 10)
-				call   WriteDec
-			.else
+	.while(ecx != 0)
 
-				mov    al, '0'
-				call   WriteChar
-				mov    eax, edx
-				call   WriteDec
+	    mov    edx, esi
+	    call   WriteString
+	    mov    al, ' '
+	    call   WriteChar
+	    mov    eax, [edi]
+	    mov    ebx, 100
+	    mov    edx, 0
+	    div    ebx
+	    call   WriteDec
+	    mov    al, '.'
+	    call   WriteChar
+	    mov    eax, edx
+	    .if(eax >= 10)
+		call   WriteDec
+	    .else
 
-			.endif
-		    call   Crlf
-			add    esi, 80
-			add    edi, 4
-			dec    ecx
+		mov    al, '0'
+		call   WriteChar
+		mov    eax, edx
+		call   WriteDec
 
-		.endw
+	    .endif
+	    call   Crlf
+	    add    esi, 80
+	    add    edi, 4
+	    dec    ecx
 
-		ret
+	.endw
+
+	ret
 DisplaySummary endp
 
 end main
