@@ -43,55 +43,55 @@ main proc
 
         ;Get First Name
 	mov    esi, OFFSET names
-		mov    edx, OFFSET namePmp
-		mov    ecx, 40
-		call   GetName
-		
-		;Get Second Name
-		mov    esi, OFFSET names
-		add    esi, 40
-		mov    edx, OFFSET namePmp
-		mov    ecx, 40
-		call   GetName
+	mov    edx, OFFSET namePmp
+	mov    ecx, 40
+	call   GetName
+	
+	;Get Second Name
+	mov    esi, OFFSET names
+	add    esi, 40
+	mov    edx, OFFSET namePmp
+	mov    ecx, 40
+	call   GetName
 
-		;Confirmation (may remove later)
-		mov     [entrySizes], 0
-		mov     [entrySizes + 4], 0
-		mov     [totals], 0
-		mov     [totals + 4], 0
+	;Confirmation (may remove later)
+	mov    [entrySizes], 0
+	mov    [entrySizes + 4], 0
+	mov    [totals], 0
+	mov    [totals + 4], 0
 
-		;Process First Person
-		mov     done, 'Q'
-		mov     esi, OFFSET person1Dates
-		mov     edi, OFFSET person1Spending
-		.while(done != 'Y')
+	;Process First Person
+	mov    done, 'Q'
+	mov    esi, OFFSET person1Dates
+	mov    edi, OFFSET person1Spending
+	.while(done != 'Y')
 
-			;Get Spending Entries for First Person 
-			mov     edx, OFFSET datePmp
+		;Get Spending Entries for First Person 
+		mov     edx, OFFSET datePmp
+		call    WriteString
+		mov     ecx, 80
+		call    GetEntryInformation
+		add     [entrySizes], 1
+		add     esi, 80
+		add     edi, 4
+
+		;Check If Done
+		mov     edx, OFFSET donePmp
+	    	.if(done == 'N')
+			mov     done, 'Q'
+	    	.endif
+	    	.while(done != 'Y' && done != 'N')
+
 			call    WriteString
-			mov     ecx, 80
-			call    GetEntryInformation
-			add     [entrySizes], 1
-			add     esi, 80
-			add     edi, 4
+			call    ReadChar
+			call    WriteChar
+			call    Crlf
+			call    Crlf
+			mov     done, al
 
-			;Check If Done
-			mov     edx, OFFSET donePmp
-		    .if(done == 'N')
-		        mov     done, 'Q'
-		    .endif
-		    .while(done != 'Y' && done != 'N')
+	    	.endw
 
-		        call    WriteString
-		        call    ReadChar
-		        call    WriteChar
-		        call    Crlf
-				call    Crlf
-		        mov     done, al
-
-		    .endw
-
-	    .endw
+	.endw
 
 		;Calculate Total for First Person
 	    mov     esi, OFFSET totals
