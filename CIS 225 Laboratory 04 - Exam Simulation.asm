@@ -1,4 +1,4 @@
-;   NAME:			Justyce Countryman
+;   NAME:		Justyce Countryman
 ;	
 ;   Due Date:		Monday March 21, 2022
 ;
@@ -34,7 +34,7 @@ ExitProcess proto,dwExitCode:dword
 	ansError		byte	"You entered an invalid answer, try again!", 0
 	numCorrect		word	?
 	numWrong		word	?
-	percentScore	word	?
+	percentScore		word	?
 	letterGrade		byte	?
 	percentPmp		byte	"Your grade for this test (as a percentage) is: ", 0
 	letterPmp		byte	"Your grade for this test (as a letter) is: ", 0
@@ -42,158 +42,157 @@ ExitProcess proto,dwExitCode:dword
 .code
 main proc
 		
-		;Get Student Name
-		mov     ecx, 18
-		mov		edx, OFFSET namePmp
-		call	GetStudentName
-		
-		;Get Valid Answers
-		mov		ecx, 12
-		mov		esi, OFFSET studentAns
-		call	GetValidAnswers
+	;Get Student Name
+	mov     ecx, 18
+	mov	edx, OFFSET namePmp
+	call	GetStudentName
+	
+	;Get Valid Answers
+	mov	ecx, 12
+	mov	esi, OFFSET studentAns
+	call	GetValidAnswers
 
-		;Grade Each Answer
-		mov		ecx, 12
-		mov		esi, OFFSET studentAns
-		mov     edx, OFFSET ansKey
-		mov		al, [edx]
-		mov     bl, [esi]
-		call	GradeEachAnswer
+	;Grade Each Answer
+	mov	ecx, 12
+	mov	esi, OFFSET studentAns
+	mov     edx, OFFSET ansKey
+	mov	al, [edx]
+	mov     bl, [esi]
+	call	GradeEachAnswer
 
-		;Calculate Percent
-		mov		ax, numCorrect
-		call	CalculatePercent
+	;Calculate Percent
+	mov	ax, numCorrect
+	call	CalculatePercent
 
-		;Determine Letter Grade
-		call	DetermineLetterGrade
+	;Determine Letter Grade
+	call	DetermineLetterGrade
 
-		;Display Grade Summary
-		mov		esi, OFFSET studentName
-		call	DisplayGradeSummary
+	;Display Grade Summary
+	mov	esi, OFFSET studentName
+	call	DisplayGradeSummary
 
-		invoke ExitProcess,0
+	invoke ExitProcess,0
 main endp
 
 GetStudentName proc
 		
-		;Displays only a limited number of characters
-		call	WriteString
-		mov		edx, OFFSET studentName
-		call	ReadString
-		;mov		studentName, ax
+	;Displays only a limited number of characters
+	call	WriteString
+	mov	edx, OFFSET studentName
+	call	ReadString
+	;mov	studentName, ax
 
-				ret
+	ret
 GetStudentName endp
 
 GetValidAnswers proc
 		
-lp1:	mov		edx, OFFSET ansPmp
+	lp1:	mov	edx, OFFSET ansPmp
 		call	WriteString
 		call	ReadChar
 		call	WriteChar
 		call	Crlf
-		cmp		al, 'A'
-		jb		error
-		cmp		al, 'D'
-		ja		error
-		mov		[esi], ax
+		cmp	al, 'A'
+		jb	error
+		cmp	al, 'D'
+		ja	error
+		mov	[esi], ax
 		add     esi, 2
 		cmp     ecx, 1
-		je		finished
+		je	finished
 		loop	lp1
 
-error:  mov		edx, OFFSET ansError
+	error:  mov	edx, OFFSET ansError
 		call	WriteString
 		call	Crlf
-		jmp		lp1
+		jmp	lp1
 		
-
-finished:		ret
+	finished:       ret
 GetValidAnswers endp
 
 GradeEachAnswer proc
 		
-lp2: 	 cmp	al, bl
-		 je		correct
-		 jne	wrong
+	lp2: 	 cmp	al, bl
+	 	 je	correct
+	 	 jne	wrong
 
-correct: add	numCorrect, 1
+	correct: add	numCorrect, 1
 		 cmp	ecx, 1
-		 je		graded
+		 je	graded
 		 add    esi, 2
 		 add    edx, 2
 		 mov    al, [edx]
 		 mov    bl, [esi]
 		 loop	lp2
 
-wrong:	 add	numWrong, 1
+	wrong:	 add	numWrong, 1
 		 cmp	ecx, 1
-		 je		graded
+		 je	graded
 		 add	esi, 2
 		 add	edx, 2
 		 mov	al, [edx]
 		 mov	bl, [esi]
 		 loop	lp2
 
-graded:			ret
+	graded:	 ret
 GradeEachAnswer endp
 
 CalculatePercent proc
 		
-		mov		bx, 100
-		mul		bx
-		mov		bx, 12
-		mov		dx, 0
-		div		bx
-		mov		percentScore, ax
+	mov	bx, 100
+	mul	bx
+	mov	bx, 12
+	mov	dx, 0
+	div	bx
+	mov	percentScore, ax
 
-				ret
+	ret
 CalculatePercent endp
 
 DetermineLetterGrade proc
 		
-		cmp		ax, 90
-		jae		gradeA
-		cmp		ax, 80
-		jae		gradeB
-		cmp		ax, 70
-		jae		gradeC
-		cmp		ax, 60
-		jae		gradeD
-		mov		letterGrade, 'F'
-		jmp		gradeReady
+	cmp	ax, 90
+	jae	gradeA
+	cmp	ax, 80
+	jae	gradeB
+	cmp	ax, 70
+	jae	gradeC
+	cmp	ax, 60
+	jae	gradeD
+	mov	letterGrade, 'F'
+	jmp	gradeReady
 		
-gradeA: mov		letterGrade, 'A'
-		jmp		gradeReady
-
-gradeB: mov		letterGrade, 'B'
-		jmp		gradeReady
-
-gradeC: mov		letterGrade, 'C'
-		jmp		gradeReady
-
-gradeD: mov		letterGrade, 'D'
-		jmp		gradeReady
-
-gradeReady:			ret
+	gradeA: mov	letterGrade, 'A'
+		jmp	gradeReady
+	
+	gradeB: mov	letterGrade, 'B'
+		jmp	gradeReady
+	
+	gradeC: mov	letterGrade, 'C'
+		jmp	gradeReady
+	
+	gradeD: mov	letterGrade, 'D'
+		jmp	gradeReady
+	
+	gradeReady:	ret
 DetermineLetterGrade endp
 
 DisplayGradeSummary proc
 		
-		mov		edx, OFFSET studentName
-		call	WriteString
-		call	Crlf
-		mov		edx, OFFSET percentPmp
-		call	WriteString
-		mov		ax, percentScore
-		call	WriteDec
-		call	Crlf
-		mov		edx, OFFSET letterPmp
-		call	WriteString
-		mov		al, letterGrade
-		call	WriteChar
-		call	Crlf
+	mov	edx, OFFSET studentName
+	call	WriteString
+	call	Crlf
+	mov	edx, OFFSET percentPmp
+	call	WriteString
+	mov	ax, percentScore
+	call	WriteDec
+	call	Crlf
+	mov	edx, OFFSET letterPmp
+	call	WriteString
+	mov	al, letterGrade
+	call	WriteChar
+	call	Crlf
 
-				ret
+	ret
 DisplayGradeSummary endp
 end main
