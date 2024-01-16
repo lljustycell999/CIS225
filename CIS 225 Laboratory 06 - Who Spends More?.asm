@@ -103,7 +103,7 @@ main proc
 	.endw
 
 	;Process Second Person
-	mov    done, 'Q'
+	mov     done, 'Q'
 	mov     esi, OFFSET person2Dates
 	mov     edi, OFFSET person2Spending
 	.while(done != 'Y')
