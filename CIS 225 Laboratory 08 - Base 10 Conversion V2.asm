@@ -35,45 +35,45 @@ ExitProcess proto,dwExitCode:dword
 .code
 main proc
 		
-		mov     done, 'Q'
-		.while(done != 'Y')
+	mov     done, 'Q'
+	.while(done != 'Y')
 
-		    ;Get Exponent
-			push    OFFSET exponent ; [ebp + 16]
-			push    OFFSET exponentPmp ; [ebp + 12]
-			push    OFFSET zeroPmp ; [ebp + 8]
-		    call    GetExponentNumber
+		;Get Exponent
+		push    OFFSET exponent 	; [ebp + 16]
+		push    OFFSET exponentPmp 	; [ebp + 12]
+		push    OFFSET zeroPmp 		; [ebp + 8]
+	    	call    GetExponentNumber
 
-		    ;Get Base
-			push    OFFSET base ; [ebp + 12]
-			push    OFFSET basePmp ; [ebp + 8]
-		    call    GetBase
+		;Get Base
+		push    OFFSET base 		; [ebp + 12]
+		push    OFFSET basePmp 		; [ebp + 8]
+		call    GetBase
 
-		    ;Perform Conversion
-			push    base ; [ebp + 14]
-			push    exponent ; [ebp + 12]
-			push    OFFSET numRemainders ; [ebp + 8]
-		    call    PerformConversion
+		;Perform Conversion
+		push    base 			; [ebp + 14]
+		push    exponent 		; [ebp + 12]
+		push    OFFSET numRemainders 	; [ebp + 8]
+		call    PerformConversion
 
-		    ;Check If Done
-		    mov     edx, OFFSET donePmp
-		    .if(done == 'N')
-		        mov     done, 'Q'
-		    .endif
-		    .while(done != 'Y' && done != 'N')
+		;Check If Done
+		mov     edx, OFFSET donePmp
+		.if(done == 'N')
+			mov     done, 'Q'
+		.endif
+		.while(done != 'Y' && done != 'N')
 
-		        call    WriteString
-		        call    ReadChar
-		        call    WriteChar
-		        call    Crlf
-		        call    Crlf
-		        mov     done, al
-
-		    .endw
+			call    WriteString
+			call    ReadChar
+			call    WriteChar
+			call    Crlf
+			call    Crlf
+			mov     done, al
 
 		.endw
 
-		invoke ExitProcess,0
+	.endw
+
+	invoke ExitProcess,0
 main endp
 
 GetExponentNumber proc
