@@ -1,4 +1,4 @@
-;   NAME:			Justyce Countryman
+;   NAME:		Justyce Countryman
 ;	
 ;   Due Date:		Friday April 15, 2022
 ;
@@ -24,19 +24,19 @@ ExitProcess proto,dwExitCode:dword
 
 .data
 		
-		person1Dates    byte 80 DUP(80 DUP(?))
-		person1Spending dword 80 DUP(?)
-		person2Dates    byte 80 DUP(80 DUP(?))
-		person2Spending dword 80 DUP(?)
-		entrySizes      dword 2 DUP(?)
-		totals          dword 2 DUP(?)
-		names           byte  2 DUP(40 DUP(?))
-		done            byte  ?
-		namePmp         byte "Enter the spender's name: ", 0
-		donePmp         byte "Are you done (Y/N): ", 0 
-		datePmp         byte "Enter the date of the spending entry: ", 0
-		spendingPmp     byte "Enter the amount of the spending entry (IN PENNIES): ", 0
-		totalPmp        byte "Your total spent is: ", 0
+	person1Dates    byte  80 DUP(80 DUP(?))
+	person1Spending dword 80 DUP(?)
+	person2Dates    byte  80 DUP(80 DUP(?))
+	person2Spending dword 80 DUP(?)
+	entrySizes      dword 2 DUP(?)
+	totals          dword 2 DUP(?)
+	names           byte  2 DUP(40 DUP(?))
+	done            byte  ?
+	namePmp         byte  "Enter the spender's name: ", 0
+	donePmp         byte  "Are you done (Y/N): ", 0 
+	datePmp         byte  "Enter the date of the spending entry: ", 0
+	spendingPmp     byte  "Enter the amount of the spending entry (IN PENNIES): ", 0
+	totalPmp        byte  "Your total spent is: ", 0
 
 .code
 main proc
