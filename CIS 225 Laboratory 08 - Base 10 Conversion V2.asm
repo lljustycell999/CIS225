@@ -78,13 +78,13 @@ main endp
 
 GetExponentNumber proc
 		
-		enter  0, 0
-		pushad
+	enter  0, 0
+	pushad
 
-		mov    ax, 0
+	mov    ax, 0
         .while(ax == 0)
 		    
-			mov     edx, [ebp + 12]
+	    mov     edx, [ebp + 12]
             call    WriteString
             call    ReadDec
 
@@ -95,89 +95,89 @@ GetExponentNumber proc
                 call    Crlf
                 call    Crlf
 
-			.endif
+	    .endif
 			      
         .endw
-		mov     ebx, [ebp + 16]
+	mov     ebx, [ebp + 16]
         mov     [ebx], ax
-		popad
-		leave
+	popad
+	leave
 
-            ret    12
+        ret    12
 GetExponentNumber endp
 
 GetBase proc
         
-		enter   0, 0
-		pushad
+	enter   0, 0
+	pushad
 
-		mov     ax, -1
-		.while(ax < 2 || ax > 16)
-		    
-			mov     edx, [ebp + 8]
-		    call    WriteString
-		    call    ReadDec
+	mov     ax, -1
+	.while(ax < 2 || ax > 16)
+	    
+	    mov     edx, [ebp + 8]
+	    call    WriteString
+	    call    ReadDec
 
-		.endw
-		call    Crlf
-		mov     ebx, [ebp + 12]
-		mov     [ebx], ax
-		popad
-		leave
+	.endw
+	call    Crlf
+	mov     ebx, [ebp + 12]
+	mov     [ebx], ax
+	popad
+	leave
 
-            ret    8
+    	ret    8
 GetBase endp
 
 PerformConversion proc
 		
-		enter   4, 0 ;[EBP - 4]
-		;pushad
+	enter   4, 0 	;[EBP - 4]
+	;pushad
 
-		;mov     cx, 0
-		mov     ax, WORD PTR[ebp + 12]
-		mov     bx, WORD PTR[ebp + 14]
-		.if(ax != 0)
+	;mov     cx, 0
+	mov     ax, WORD PTR[ebp + 12]
+	mov     bx, WORD PTR[ebp + 14]
+	.if(ax != 0)
 
-		    mov     edx, 0
-		    div     bx
-		    mov		[ebp - 4], edx
-			
-			push    WORD PTR[ebp + 14]
-			push    ax
-			push    DWORD PTR[ebp + 8]
-		    call    PerformConversion
+	    mov     edx, 0
+	    div     bx
+	    mov	    [ebp - 4], edx
+		
+	    push    WORD PTR[ebp + 14]
+	    push    ax
+	    push    DWORD PTR[ebp + 8]
+	    call    PerformConversion
 
-		    mov	    ebx, [ebp - 4]
-			;mov	    ebx, [esi]
-		    .if(bx == 10)
-		        mov     al, 'A'
-				call    WriteChar
-		    .elseif(bx == 11)
-				mov     al, 'B'
-		        call    WriteChar
-		    .elseif(bx == 12)
-		        mov     al, 'C'
-				call    WriteChar
-		    .elseif(bx == 13)
-		        mov     al, 'D'
-				call	WriteChar
-		    .elseif(bx == 14)
-		        mov     al, 'E'
-				call    WriteChar
-		    .elseif(bx == 15)
-		        mov     al, 'F'
-				call    WriteChar
-			.else
-			    movzx     eax, bl
-				call    WriteDec
+	    mov	    ebx, [ebp - 4]
+	    ;mov    ebx, [esi]
+	    .if(bx == 10)
+		mov     al, 'A'
+		call    WriteChar
+	    .elseif(bx == 11)
+		mov     al, 'B'
+		call    WriteChar
+	    .elseif(bx == 12)
+		mov     al, 'C'
+		call    WriteChar
+	    .elseif(bx == 13)
+		mov     al, 'D'
+		call	WriteChar
+	    .elseif(bx == 14)
+		mov     al, 'E'
+		call    WriteChar
+	    .elseif(bx == 15)
+		mov     al, 'F'
+		call    WriteChar
+	    .else
+		movzx     eax, bl
+		call    WriteDec
 
-		    .endif
+	    .endif
 		    
-		.endif
-		;popad
-		leave
+	.endif
+	;popad
+	leave
 
-            ret    10
+	ret    10
 PerformConversion endp
 
 end main
