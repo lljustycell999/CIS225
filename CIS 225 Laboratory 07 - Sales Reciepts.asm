@@ -1,4 +1,4 @@
-;   NAME:		    Justyce Countryman
+;   NAME: Justyce Countryman
 ;
 ;   Due Date:		Friday April 29, 2022
 ;
