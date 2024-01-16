@@ -266,7 +266,7 @@ main proc
     .endif
     call   Crlf
 
-        invoke ExitProcess,0
+    invoke ExitProcess,0
 main endp
 
 GetCustomerInfo proc uses edx esi eax
@@ -274,11 +274,11 @@ GetCustomerInfo proc uses edx esi eax
     call   WriteString
     mov    edx, esi
     call   ReadString
-    call   Crlf ;Used before screen clear
+    call   Crlf        ;Used before screen clear
     call   WriteString ;Used before screen clear
-    call   Crlf ;Used before screen clear
+    call   Crlf        ;Used before screen clear
 
-        ret
+    ret
 GetCustomerInfo endp
 
 GetTaxRate proc uses esi eax
@@ -287,7 +287,7 @@ GetTaxRate proc uses esi eax
     call   ReadDec
     mov    [esi], eax
 
-        ret
+    ret
 GetTaxRate endp
 
 GetItemQuantities proc
@@ -302,18 +302,18 @@ GetItemQuantities proc
     .endw
     mov    [esi], al
 
-        ret
+    ret
 GetItemQuantities endp
 
 ComputeExtendedCosts proc
     
     ;Sends answer back as a REFERENCE PARAMETER
     push   ebp
-    mov    ebp, esp ;Establishes in ebp the reference point for stuff in the stack
-    sub    esp, 4 ;Creates a local variable for subtotal that will be 4 bytes [ebp - 4]
-    push   ebx ;AFTER STACK FRAME IS SET, preserves registers - no USES
-    push   ecx ;AFTER STACK FRAME IS SET, preserves registers - no USES
-    push   eax ;AFTER STACK FRAME IS SET, preserves registers - no USES
+    mov    ebp, esp      ;Establishes in ebp the reference point for stuff in the stack
+    sub    esp, 4        ;Creates a local variable for subtotal that will be 4 bytes [ebp - 4]
+    push   ebx           ;AFTER STACK FRAME IS SET, preserves registers - no USES
+    push   ecx           ;AFTER STACK FRAME IS SET, preserves registers - no USES
+    push   eax           ;AFTER STACK FRAME IS SET, preserves registers - no USES
     
     ;Multiply quantity times price
     mov    eax, 0
@@ -324,13 +324,13 @@ ComputeExtendedCosts proc
     mov    ebx, [ebp + 16] ;Gets the address from the stack
     mov    [ebx], eax
 
-    pop    eax ;BEFORE removing STACK FRAME, reclaim registers
-    pop    ecx ;BEFORE removing STACK FRAME, reclaim registers
-    pop    ebx ;BEFORE removing STACK FRAME, reclaim registers
-    add    esp, 4  ;Eliminates the local subtotal variable
+    pop    eax      ;BEFORE removing STACK FRAME, reclaim registers
+    pop    ecx      ;BEFORE removing STACK FRAME, reclaim registers
+    pop    ebx      ;BEFORE removing STACK FRAME, reclaim registers
+    add    esp, 4   ;Eliminates the local subtotal variable
     pop    ebp
 
-        ret
+    ret
 ComputeExtendedCosts endp
 
 ComputeSubtotal proc
@@ -339,7 +339,7 @@ ComputeSubtotal proc
     add    eax, ecx
     mov    [subtotal], eax
 
-        ret
+    ret
 ComputeSubtotal endp
 
 ComputeTax proc
@@ -350,7 +350,7 @@ ComputeTax proc
     div    ebx
     mov    [taxTotal], eax
 
-        ret
+    ret
 ComputeTax endp
 
 ComputeTotal proc
@@ -358,7 +358,7 @@ ComputeTotal proc
     add    eax, ebx
     mov    [total], eax
 
-        ret
+    ret
 ComputeTotal endp
 
 DisplaySalesSummary proc
@@ -408,6 +408,6 @@ DisplaySalesSummary proc
     call   Crlf
     call   Crlf
 
-        ret
+    ret
 DisplaySalesSummary endp
 end main
