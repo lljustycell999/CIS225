@@ -36,26 +36,44 @@ ExitProcess proto,dwExitCode:dword
 		donePmp         byte "Are you done (Y/N): ", 0 
 		datePmp         byte "Enter the date of the spending entry: ", 0
 		spendingPmp     byte "Enter the amount of the spending entry (IN PENNIES): ", 0
+		totalPmp        byte "Your total spent is: ", 0
 
 .code
 main proc
 
         ;Get First Name
+		mov    esi, OFFSET names
 		mov    edx, OFFSET namePmp
-		call   WriteString
 		mov    ecx, 40
-		mov    edx, OFFSET names
 		call   GetName
 		
-		mov    done, 'Q'
+		;Get Second Name
+		mov    esi, OFFSET names
+		add    esi, 40
+		mov    edx, OFFSET namePmp
+		mov    ecx, 40
+		call   GetName
+
+		;Confirmation (may remove later)
+		mov     [entrySizes], 0
+		mov     [entrySizes + 4], 0
+		mov     [totals], 0
+		mov     [totals + 4], 0
+
+		;Process First Person
+		mov     done, 'Q'
+		mov     esi, OFFSET person1Dates
+		mov     edi, OFFSET person1Spending
 		.while(done != 'Y')
 
 			;Get Spending Entries for First Person 
 			mov     edx, OFFSET datePmp
 			call    WriteString
 			mov     ecx, 80
-			mov     esi, OFFSET person1Dates
 			call    GetEntryInformation
+			add     [entrySizes], 1
+			add     esi, 80
+			add     edi, 4
 
 			;Check If Done
 			mov     edx, OFFSET donePmp
@@ -75,23 +93,30 @@ main proc
 
 	    .endw
 
-		;Get Second Name
-		mov    edx, OFFSET namePmp
-		call   WriteString
-		mov    ecx, 40
-		mov    edx, OFFSET names
-		add    edx, 40
-		call   GetName
+		;Calculate Total for First Person
+	    mov     esi, OFFSET totals
+	    mov     edi, OFFSET person1Spending
+		mov     ecx, [entrySizes]
+		.while(ecx != 0)
+			call    ComputeTotal
+			dec     ecx
+		.endw
 
+		;Process Second Person
 		mov    done, 'Q'
+		mov     esi, OFFSET person2Dates
+		mov     edi, OFFSET person2Spending
 		.while(done != 'Y')
 
 			;Get Spending Entries for Second Person
 			mov     edx, OFFSET datePmp
 			call    WriteString
+			mov     edx, OFFSET person2Dates
 			mov     ecx, 80
-			mov     esi, OFFSET person2Dates
 			call    GetEntryInformation
+			add     [entrySizes + 4], 1
+            add     esi, 80
+			add     edi, 4
 
 			;Check If Done
 			mov     edx, OFFSET donePmp
@@ -104,22 +129,86 @@ main proc
 		        call    ReadChar
 		        call    WriteChar
 		        call    Crlf
+				call    Crlf
 		        mov     done, al
 
 		    .endw
 
         .endw
+		call    Crlf
+
+		;Calculate Total for Second Person
+	    mov     esi, OFFSET totals
+		add     esi, 4
+		mov     edi, OFFSET person2Spending
+		mov     ecx, [entrySizes + 4]
+		.while(ecx != 0)
+			call    ComputeTotal
+			dec		ecx
+		.endw
 
 		;Display Summary
 		mov    esi, OFFSET names
-		mov    edx, [esi]
+		mov    ecx, [entrySizes]
+		mov    edx, esi
 		call   WriteString
-		
+		call   Crlf
+		mov    esi, OFFSET person1Dates
+		mov    edi, OFFSET person1Spending
+		call   DisplaySummary
+		mov    edx, OFFSET totalPmp
+		call   WriteString
+		mov    eax, [totals]
+		mov    ebx, 100
+		mov    edx, 0
+		div    ebx
+		call   WriteDec
+		mov    al, '.'
+		call   WriteChar
+		mov    eax, edx
+		.if(eax >= 10)
+			call   WriteDec
+		.else
+
+			mov    al, '0'
+			call   WriteChar
+			mov    eax, edx
+			call   WriteDec
+
+		.endif
+		call   Crlf
 		call   Crlf
 
-		add    esi, 1
-		mov    edx, [esi]
+		mov    esi, OFFSET names
+		add    esi, 40
+		mov    ecx, [entrySizes + 4]
+		mov    edx, esi
 		call   WriteString
+		call   Crlf
+		mov    esi, OFFSET person2Dates
+		mov    edi, OFFSET person2Spending
+		mov    ebx, [totals + 4]
+		call   DisplaySummary
+		mov    edx, OFFSET totalPmp
+		call   WriteString
+		mov    eax, [totals + 4]
+		mov    ebx, 100
+		mov    edx, 0
+		div    ebx
+		call   WriteDec
+		mov    al, '.'
+		call   WriteChar
+		mov    eax, edx
+		.if(eax >= 10)
+			call   WriteDec
+		.else
+
+			mov    al, '0'
+			call   WriteChar
+			mov    eax, edx
+			call   WriteDec
+
+		.endif
 
 		invoke ExitProcess,0
 main endp
@@ -127,6 +216,8 @@ main endp
 
 GetName proc uses edx esi eax
 
+		call    WriteString
+		mov     edx, esi
 		call    ReadString
 		call    Crlf
 		call    WriteString
@@ -135,20 +226,61 @@ GetName proc uses edx esi eax
         ret
 GetName endp
 
-GetEntryInformation proc
+GetEntryInformation proc uses edi eax
 		
+		mov     edx, esi
 		call    ReadString
 		call    Crlf
 		mov     edx, OFFSET spendingPmp
 		call    WriteString
 		call    ReadDec
+		mov     [edi], eax
 		call    Crlf
 
 		ret
 GetEntryInformation endp
 
-DisplaySummary proc
+ComputeTotal proc uses esi
+		
+		mov    eax, [edi]
+		add    [esi], eax
+		add    edi, 4
 
+		ret
+ComputeTotal endp
+
+DisplaySummary proc uses eax ebx ecx edx esi edi
+
+		.while(ecx != 0)
+   
+		    mov    edx, esi
+		    call   WriteString
+		    mov    al, ' '
+		    call   WriteChar
+		    mov    eax, [edi]
+			mov    ebx, 100
+			mov    edx, 0
+			div    ebx
+		    call   WriteDec
+			mov    al, '.'
+			call   WriteChar
+			mov    eax, edx
+			.if(eax >= 10)
+				call   WriteDec
+			.else
+
+				mov    al, '0'
+				call   WriteChar
+				mov    eax, edx
+				call   WriteDec
+
+			.endif
+		    call   Crlf
+			add    esi, 80
+			add    edi, 4
+			dec    ecx
+
+		.endw
 
 		ret
 DisplaySummary endp
