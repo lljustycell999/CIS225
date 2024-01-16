@@ -42,7 +42,7 @@ ExitProcess proto,dwExitCode:dword
 main proc
 
         ;Get First Name
-		mov    esi, OFFSET names
+	mov    esi, OFFSET names
 		mov    edx, OFFSET namePmp
 		mov    ecx, 40
 		call   GetName
