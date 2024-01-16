@@ -1,6 +1,6 @@
-;	NAME:			Justyce Countryman
+;	NAME:		Justyce Countryman
 ;	
-;	Due Date:		Wednesday February 16, 2022
+;	Due Date:	Wednesday February 16, 2022
 ;
 ;	Project Name:	Laboratory 01
 ;
@@ -38,40 +38,40 @@ totCost      word    ?          ;Total cost (totOverhead + lCost)
 .code
 main proc
 
-		;Compute number of passes needed
-		mov ax, dWidth
-		mov bx, sWidth
-		mov dx, 0
-		div bx
-		mov totPasses, ax
+	;Compute number of passes needed
+	mov ax, dWidth
+	mov bx, sWidth
+	mov dx, 0
+	div bx
+	mov totPasses, ax
 
-		;Compute time needed for one pass
-		mov ax, dLength
-		mov bx, speed
-		mov dx, 0
-		div bx
-		mov bx, 60
-		mov dx, 0
-		div bx
-		mov tPass, ax
+	;Compute time needed for one pass
+	mov ax, dLength
+	mov bx, speed
+	mov dx, 0
+	div bx
+	mov bx, 60
+	mov dx, 0
+	div bx
+	mov tPass, ax
 
-		;Compute total time needed
-		mov ax, tPass
-		mov bx, totPasses
-		mul bx
-		mov totTime, ax
+	;Compute total time needed
+	mov ax, tPass
+	mov bx, totPasses
+	mul bx
+	mov totTime, ax
 
-		;Compute cost of labor (time)
-		mov ax, hRate
-		mov bx, totTime
-		mul bx
-		mov lCost, ax
+	;Compute cost of labor (time)
+	mov ax, hRate
+	mov bx, totTime
+	mul bx
+	mov lCost, ax
 
-		;Compute total cost (adding overhead amount)
-		mov cx, totOverhead
-		mov dx, lCost
-		add cx, dx
-		mov totCost, cx
+	;Compute total cost (adding overhead amount)
+	mov cx, totOverhead
+	mov dx, lCost
+	add cx, dx
+	mov totCost, cx
 
 	invoke ExitProcess,0
 main endp
