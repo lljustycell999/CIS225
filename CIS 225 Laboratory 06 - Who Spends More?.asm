@@ -93,124 +93,124 @@ main proc
 
 	.endw
 
-		;Calculate Total for First Person
-	    mov     esi, OFFSET totals
-	    mov     edi, OFFSET person1Spending
-		mov     ecx, [entrySizes]
-		.while(ecx != 0)
-			call    ComputeTotal
-			dec     ecx
-		.endw
+	;Calculate Total for First Person
+	mov     esi, OFFSET totals
+	mov     edi, OFFSET person1Spending
+	mov     ecx, [entrySizes]
+	.while(ecx != 0)
+		call    ComputeTotal
+		dec     ecx
+	.endw
 
-		;Process Second Person
-		mov    done, 'Q'
-		mov     esi, OFFSET person2Dates
-		mov     edi, OFFSET person2Spending
-		.while(done != 'Y')
+	;Process Second Person
+	mov    done, 'Q'
+	mov     esi, OFFSET person2Dates
+	mov     edi, OFFSET person2Spending
+	.while(done != 'Y')
 
-			;Get Spending Entries for Second Person
-			mov     edx, OFFSET datePmp
+		;Get Spending Entries for Second Person
+		mov     edx, OFFSET datePmp
+		call    WriteString
+		mov     edx, OFFSET person2Dates
+		mov     ecx, 80
+		call    GetEntryInformation
+		add     [entrySizes + 4], 1
+            	add     esi, 80
+		add     edi, 4
+
+		;Check If Done
+		mov     edx, OFFSET donePmp
+		.if(done == 'N')
+			mov     done, 'Q'
+		.endif
+		.while(done != 'Y' && done != 'N')
+
 			call    WriteString
-			mov     edx, OFFSET person2Dates
-			mov     ecx, 80
-			call    GetEntryInformation
-			add     [entrySizes + 4], 1
-            add     esi, 80
-			add     edi, 4
-
-			;Check If Done
-			mov     edx, OFFSET donePmp
-		    .if(done == 'N')
-		        mov     done, 'Q'
-		    .endif
-		    .while(done != 'Y' && done != 'N')
-
-		        call    WriteString
 		        call    ReadChar
 		        call    WriteChar
 		        call    Crlf
-				call    Crlf
+			call    Crlf
 		        mov     done, al
 
-		    .endw
-
-        .endw
-		call    Crlf
-
-		;Calculate Total for Second Person
-	    mov     esi, OFFSET totals
-		add     esi, 4
-		mov     edi, OFFSET person2Spending
-		mov     ecx, [entrySizes + 4]
-		.while(ecx != 0)
-			call    ComputeTotal
-			dec		ecx
 		.endw
 
-		;Display Summary
-		mov    esi, OFFSET names
-		mov    ecx, [entrySizes]
-		mov    edx, esi
-		call   WriteString
-		call   Crlf
-		mov    esi, OFFSET person1Dates
-		mov    edi, OFFSET person1Spending
-		call   DisplaySummary
-		mov    edx, OFFSET totalPmp
-		call   WriteString
-		mov    eax, [totals]
-		mov    ebx, 100
-		mov    edx, 0
-		div    ebx
+        .endw
+	call    Crlf
+
+	;Calculate Total for Second Person
+	mov     esi, OFFSET totals
+	add     esi, 4
+	mov     edi, OFFSET person2Spending
+	mov     ecx, [entrySizes + 4]
+	.while(ecx != 0)
+		call    ComputeTotal
+		dec	ecx
+	.endw
+
+	;Display Summary
+	mov    esi, OFFSET names
+	mov    ecx, [entrySizes]
+	mov    edx, esi
+	call   WriteString
+	call   Crlf
+	mov    esi, OFFSET person1Dates
+	mov    edi, OFFSET person1Spending
+	call   DisplaySummary
+	mov    edx, OFFSET totalPmp
+	call   WriteString
+	mov    eax, [totals]
+	mov    ebx, 100
+	mov    edx, 0
+	div    ebx
+	call   WriteDec
+	mov    al, '.'
+	call   WriteChar
+	mov    eax, edx
+	.if(eax >= 10)
 		call   WriteDec
-		mov    al, '.'
+	.else
+
+		mov    al, '0'
 		call   WriteChar
 		mov    eax, edx
-		.if(eax >= 10)
-			call   WriteDec
-		.else
-
-			mov    al, '0'
-			call   WriteChar
-			mov    eax, edx
-			call   WriteDec
-
-		.endif
-		call   Crlf
-		call   Crlf
-
-		mov    esi, OFFSET names
-		add    esi, 40
-		mov    ecx, [entrySizes + 4]
-		mov    edx, esi
-		call   WriteString
-		call   Crlf
-		mov    esi, OFFSET person2Dates
-		mov    edi, OFFSET person2Spending
-		mov    ebx, [totals + 4]
-		call   DisplaySummary
-		mov    edx, OFFSET totalPmp
-		call   WriteString
-		mov    eax, [totals + 4]
-		mov    ebx, 100
-		mov    edx, 0
-		div    ebx
 		call   WriteDec
-		mov    al, '.'
+
+	.endif
+	call   Crlf
+	call   Crlf
+
+	mov    esi, OFFSET names
+	add    esi, 40
+	mov    ecx, [entrySizes + 4]
+	mov    edx, esi
+	call   WriteString
+	call   Crlf
+	mov    esi, OFFSET person2Dates
+	mov    edi, OFFSET person2Spending
+	mov    ebx, [totals + 4]
+	call   DisplaySummary
+	mov    edx, OFFSET totalPmp
+	call   WriteString
+	mov    eax, [totals + 4]
+	mov    ebx, 100
+	mov    edx, 0
+	div    ebx
+	call   WriteDec
+	mov    al, '.'
+	call   WriteChar
+	mov    eax, edx
+	.if(eax >= 10)
+		call   WriteDec
+	.else
+
+		mov    al, '0'
 		call   WriteChar
 		mov    eax, edx
-		.if(eax >= 10)
-			call   WriteDec
-		.else
+		call   WriteDec
 
-			mov    al, '0'
-			call   WriteChar
-			mov    eax, edx
-			call   WriteDec
+	.endif
 
-		.endif
-
-		invoke ExitProcess,0
+	invoke ExitProcess,0
 main endp
 
 
